@@ -1,0 +1,11 @@
+{
+  "db": {
+    "port" : 1337,
+    "mongoose": {
+      "uri": "mongodb://localhost/cms"
+    }
+  },
+  "main": {
+    "port": 3000
+  }
+}
