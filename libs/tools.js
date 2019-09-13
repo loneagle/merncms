@@ -14,6 +14,14 @@ exports.notNullFieldsSignUp = (user) => {
     )
 };
 
+exports.notNullFieldsSignUp = (user) => {
+    return (
+        user &&
+        user.email &&
+        user.password
+    )
+};
+
 exports.checkNumberOrWord = (string) => {
     const regExp = new RegExp('^[а-яА-Яa-zA-Z0-9 ]*$');
     return regExp.test(string);

@@ -4,20 +4,26 @@ const libs = process.cwd() + '/libs/';
 const log = require(libs + 'log')(module);
 
 module.exports = {
-    createUser: (newUser, callback) => {
-        bcrypt.genSalt(10, function(err, salt) {
+    createUser: (newUser, error, callback) => {
+        bcrypt.genSalt(10, function(errorBcrypt, salt) {
+            if (errorBcrypt) {
+                return error(errorBcrypt);
+            }
+
             bcrypt.hash(newUser.password, salt, function(err, hash) {
-                log.error.bind(console, `BCrypt: ${err}`);
-                callback(err);
+                if (err) {
+                    return error(err);
+                }
+
                 newUser.password = hash;
                 const user = new User(newUser);
 
                 user.save((err) => {
                     if (err) {
                         log.error.bind(console, `MongoDB error: ${err}`);
-                        callback(err);
+                        return error(err);
                     }
-                    callback();
+                    return callback();
                 });
             });
         });
@@ -27,10 +33,31 @@ module.exports = {
         User.findById(id, callback);
     },
 
-    findAllUsers: (err, users) => {
-        User.find({}, (error, list) => {
-            err(error);
-            users(list);
+    getUserByEmail: (email, error, callback) => {
+        User.findOne({ email: email }, (err, user) => {
+            if (err) {
+                log.error.bind(console, `findAllUsers: ${err}`);
+                return error(err);
+            } else {
+                return callback(user);
+            }
+        });
+    },
+
+    findAllUsers: (error, callback) => {
+        User.find({}, (err, list) => {
+            if (err) {
+                log.error.bind(console, `findAllUsers: ${err}`);
+                return error(err);
+            } else {
+                return callback(list);
+            }
+        })
+    },
+
+    clear: (err) => {
+        User.deleteMany({}, (error) => {
+            return err(error);
         })
     },
 
