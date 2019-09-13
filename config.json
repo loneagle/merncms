@@ -1,6 +1,6 @@
 {
   "db": {
-    "port" : 1337,
+    "port" : 27017,
     "mongoose": {
       "uri": "mongodb://localhost/cms"
     }

@@ -1,7 +1,6 @@
-const mongoose = require('mongoose');
+const mongoose = require('./mongooseConnector');
 
-const userSchema = mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
+const UserSchema = mongoose.Schema({
     password: {
         type: String,
         required: true,
@@ -21,6 +20,6 @@ const userSchema = mongoose.Schema({
     }
 });
 
-const User = mongoose.model('User', userSchema);
+Object.assign(UserSchema.methods, require("./userMethods.js"));
 
-module.exports = User;
+module.exports = mongoose.model('User', UserSchema);
